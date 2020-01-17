@@ -24,6 +24,7 @@ standard_exclude_directories = [
 # Note: you may want to copy this into your setup.py file verbatim, as
 # you can't import this from another package, when you don't know if
 # that package is installed yet.
+
 def find_package_data(
         where=".",
         package="",
