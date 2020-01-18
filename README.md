@@ -1,51 +1,51 @@
 # lindart
 
-Projeto da loja virtual lindart.com.br
+<b>Projeto da loja virtual lindart.com.br</b>
 
-Issue #1 --> O diretorio no ambiente de desenvolvimento 
+Issue #1 - <b>O diretório no ambiente de desenvolvimento</b> 
 ```
 - lindart $ pyenv local 3.8.0
 - lindart $ pyenv local
   3.8.0
 ```
-- Instalar e ativar pipenv
+<b>- Instalar e ativar pipenv</b>
 ```
 -> lindart $ pip install pipenv
 -> lindart $ pipenv shell
 ```
-- Criar o file Pipfile.lock e sincronizar as pendencias
+<b>- Criar o file Pipfile.lock e sincronizar as dependências</b>
 ```
 -> (lindart) lindart $ pipenv lock --clear
 -> (lindart) lindart $ pipenv sync
 ```
 
-- Via githib --> Menu Actions 
+<b>- Via githib --> Menu Actions</b> 
 ```
 -> criado o file .github/wotkflows/pythonapp.yml
 ```
 
-Issue #3 --> Instalar a lib Django e setup do Projeto
+Issue #3 - <b>Instalar a lib Django e setup do Projeto</b>
 
-- criado o diretorio exemplo e o projeto django exemplo
+<b>- criado o diretorio exemplo e o projeto django exemplo</b>
 ```
 -> (exemplo) exemplo $ pipenv install django
 -> (exemplo) exemplo $ django-admin startproject base .
 ```
-- informar o Pycharm que o diretorio exemplo é a raiz do pacote
+<b>- informar o Pycharm que o diretório exemplo é a raiz do pacote</b>
 ```
   (selecione o diretório exemplo)-> Mark Directory as -> Sources Root
 ```
 
-- Criado file setup.py 
+<b>- Criado file setup.py</b> 
 ```
--> copiado conteudo do file setup.py-> https://github.com/renzon/django_pagarme
--> adacptado as variaveis para o projeto lindart
+-> copiado conteúdo do file setup.py-> https://github.com/renzon/django_pagarme
+-> adaptado as variaveis para o projeto lindart
    OBS:
    o projeto exemplo precisa usar o pacote original (lindart - que esta definido dentro do file setup.py)
-   é possivel instalar as aplicaçoes apartir de um sistema de arquivo local. Portanto podemos instalar dentro 
-   desta aplicação python este pacote exemplo, e podemos instalar com opção editavel. Desta forma ele vai fazer
-   um link do meu projeto direto com o codigo fonte que esta fora (pacote lindart)
-   *********************************************************************************
+   é possível instalar as aplicações apartir de um sistema de arquivo local. Portanto podemos instalar dentro 
+   desta aplicação python este pacote exemplo, e podemos instalar com opção editável. Desta forma ele vai fazer
+   um link do projeto exemplo direto com o codigo fonte que esta fora (pacote lindart)
+
    exemplo $ pipenv install -e ..
    Installing -e ..…
    ✔ Installation Succeeded 
@@ -64,42 +64,44 @@ Issue #3 --> Instalar a lib Django e setup do Projeto
        - asgiref [required: ~=3.2, installed: 3.2.3]
        - pytz [required: Any, installed: 2019.3]
        - sqlparse [required: >=0.2.2, installed: 0.3.0]
-   ***********************************************************************************
 ```
 
-- inserido no settings.py (INSTALLED_APPS) -> 'lindart'
-- Executado um add configuration -> start local do django
+<b>- Inserido no settings.py (INSTALLED_APPS) -> 'lindart'</b>
+<b>- Executado um add configuration -> start local do django</b>
 
-- instalado as libs flake8 e pytest-django no projeto exemplo
+<b>- Instalado as libs flake8 e pytest-django no projeto exemplo</b>
 ``` 
 -> pipenv install --dev flake8 pytest-django
 ```
 
-Issue #5 --> Removido Pipfile e Pifile.lock da raiz do projeto
+Issue #5 - <b>Removido Pipfile e Pifile.lock da raiz do projeto</b>
 
-Issue #7 --> Realizar um pagamento no Pagarme em ambiente de teste'
+Issue #7 - <b>Realizar um pagamento no Pagarme em ambiente de teste'</b>
 
-- alterar o test_fake() que foi criado inicialmente
+<b>- alterar o test_fake() que foi criado inicialmente</b>
 ```
 def test_status_code(client):
     resp = client.get(reverse('lindart:pagamento'))
     assert resp.status_code == 200
+```
+<b>Quando executado o teste ocorreu a falha -> Skipped: no Django settings</b>
 
-Quando executado o teste ocorreu a falha -> Skipped: no Django settings
-
-Solução:
+<b>Solução:</b>
 o pytest necessita de uma definição de onde encontrat o setting:
 - pode ser um file setup.cfg (onde podemos definir varias propriedades para diferentes frameworks)
+```
 [pytest]
 DJANGO_SETTINGS_MODULE=base.settings.
 python_files=test*.py *tests.py
+```
+<b>Quando executado o teste ocorreu a falha -> 'lindart' is not a registered namespace</b>
 
-Quando executado o teste ocorreu a falha -> 'lindart' is not a registered namespace
-
-Solução:
+<b>Solução:</b>
 Criar uma app pagamento no projeto exemplo.
 (exemplo) exemplo $ mng startapp pagamento
-exemplo $ tree
+
+<b>exemplo $ tree</b>
+```
 .
 ├── base
 │   ├── asgi.py
@@ -128,44 +130,49 @@ exemplo $ tree
 │   └── views.py
 ├── Pipfile
 └── Pipfile.lock
+```
 
-- mover o diretorio tests para dentro da app pagamentos
-- alterar no setting,py INSTALLED_APPS -> 'pagamento'
-- alterar no file test_pagina_pagamento -> 'pagamento:produto'
+<b>- Removido o diretorio tests para dentro da app pagamentos</b>
+<b>- Alterado no setting.py INSTALLED_APPS -> 'pagamento'</b>
+<b>- Alterado no file test_pagina_pagamento -> 'pagamento:produto'</b>
 
-Quando executado o teste ocorreu a falha -> pagamento' is not a registered namespace
+Quando executado o teste ocorreu a falha -> pagamento' is not a registered namespace/b>
 
-Solução:
+<b>Solução:</b>
 - Criar uma view produto no file views.py da api pagamento
+```
 def produto(request):
     pass
-
-- criar um url (pode copiar do da api base) dentro da api pagamento
+```
+<b>- criar um url (pode copiar do da api base) dentro da api pagamento</b>
+```
 from django.urls import path
 from pagamentos import views
 app_name = 'pagamentos'
 urlpatterns = [
     path('produto/', views.produto, name='produto'),
-
-- dentro do file urls.py da api base incluir:
+```
+<b>- dentro do file urls.py da api base incluir:</b>
+```
 from django.contrib import admin
 from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('pagamentos/', include('pagamentos.urls'))
-
-- inserir na views.py api pagamento
+```
+<b>- inserir na views.py api pagamento</b>
+```
 def produto(request):
     return HttpResponse()
-
-Boilerplate completa do Django (ter uma view completa)
+```
+<b>Boilerplate completa do Django (ter uma view completa)</b>
 - declarar a view
 - declarar o URL
 - maperar esta URL
-```
 
 - Criar uma pagina para poder efetuar um pagamento. Vamos copiar o codigo do site pagarme
   codigo Javascript para abrir o Checkout.
+  <a href="https://docs.pagar.me/docs/inserindo-o-checkout">https://docs.pagar.me/docs/inserindo-o-checkout</a>
  
  - Criar o teste para verificar o Jscript do checkout. Para isto o framework do Django 
    fornece umas funçoes para utilizarmos. Esta ferramentas do django sao em unittest 
@@ -177,14 +184,14 @@ Boilerplate completa do Django (ter uma view completa)
    assert_contains = _test_case.assertContains
    ```
 
-- teste criado
+<b>- teste criado</b>
 ```
 def test_pagarme_javascript(client):
     resp = client.get(reverse('pagamentos:produto'))
     assert_contains(resp, 'script src="https://assets.pagar.me/checkout/1.1.0/checkout.js"')  
 ```
 
-- apartir deste ponto podemos acessar a pagina no browser: (em branco aparece a pagina)
+<b>- apartir deste ponto podemos acessar a pagina no browser: (em branco aparece a pagina)</b>
 -> http://localhost:8000/pagamentos/produto
    
 - para retornar uma informação na pagina podemos fazer no file views.ps
@@ -199,13 +206,13 @@ def produto(request):
     return render(request, 'pagamentos/produto.html')
 ```
 
-- executando o teste depoia da alteração da views.py
-```
+- executando o teste depois da alteração da views.py
+
 -> django.template.exceptions.TemplateDoesNotExist: pagamentos/produto.html
 
 Solução:
 - criar um diretorio -> templates/pagamentos
-- criar um file -> produto.html e cola o conteudo copiado da pagina do pagarme
+- criar um file -> produto.html e cola o conteúdo copiado da pagina do pagarme
 
 :-) - teste passou
 
@@ -215,16 +222,28 @@ Solução:
    informar os dados pessoais e do cartão.
 
 -> alterando no file produtos.html -> paymentMethods: 'credit_card, boleto',
-   aparece o notão Abrir modal de pagamento e precionando o botao podemos
-   podemos escolher Cartao de Credito ou Boleto Bancario
+   aparece o botão <b>Abrir modal de pagamento</b> e precionando o botao podemos
+   podemos escolher <b>Cartao de Credito ou Boleto Bancario</b>
    Boleto bancario -> transação nao autorizada
    Cartao de Credito -> Ok
 
 OBS: Alterar no file produto.html
 -> customerData: 'False'  para customerData: 'true'
 -< com False é o proprio usuario que tem que fornecer estes dados.
-```
+
 - Para funcionar copiei o conteudo produto.html do 
   -> https://github.com/renzon/django_pagarme
 
-  
+ Issue #9 - <b>Remover flake8 da raiz e corrigi o README</b>
+ 
+ - Conteúdo do flake8 foi incorporado no file setup.cfg
+ ```
+[flake8]
+max-line-length = 120
+exclude = .venv
+```
+
+- Erros ortogáfricos corrigidos do README e melhorado apresentação.
+- Usado recomendação do Raul Esteves -<b>Como fazer um README.md BONITÃO</b>
+
+
