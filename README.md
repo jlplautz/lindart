@@ -1,11 +1,9 @@
-# lindart
+<h3># LINDART</h3>
 
 <b>Projeto da loja virtual lindart.com.br</b>
 
 
-
 [![codecov](https://codecov.io/gh/jlplautz/lindart/branch/master/graph/badge.svg)](https://codecov.io/gh/jlplautz/lindart)
-
 
 
 Issue #1 - <b>O diretório no ambiente de desenvolvimento</b> 
@@ -32,7 +30,7 @@ Issue #1 - <b>O diretório no ambiente de desenvolvimento</b>
 
 Issue #3 - <b>Instalar a lib Django e setup do Projeto</b>
 
-<b>- criado o diretorio exemplo e o projeto django exemplo</b>
+<b>- criado o diretório exemplo e o projeto django exemplo</b>
 ```
 -> (exemplo) exemplo $ pipenv install django
 -> (exemplo) exemplo $ django-admin startproject base .
@@ -275,10 +273,20 @@ Installing dependencies from Pipfile.lock (796ba5)…
 
 <b>- Inserido no file pythonapp.yml</b>
 ```
+  build:
+    env:
+      global:
+      PIPENV_NO_INIHERIT: 1
+      PIPENV_VENV_IN_PROJECT: 1
+      PIPENV_IGNORE_VIRTUALENVS: -1
+...
     - name: Generate coverage report
       working-directory: ./exemplo
       run: |
         pip install pytest
         pip install pytest-cov
         pipenv run pytest --cov=./lindart
+
+      after_sucess:
+        - pipenv run codecov
 ```

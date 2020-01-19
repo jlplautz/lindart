@@ -5,7 +5,11 @@ on: [pull_request]
 jobs:
   build:
     env:
+      global:
       PIPENV_NO_INIHERIT: 1
+      PIPENV_VENV_IN_PROJECT: 1
+      PIPENV_IGNORE_VIRTUALENVS: 1
+
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -39,3 +43,8 @@ jobs:
         pip install pytest
         pip install pytest-cov
         pipenv run pytest --cov=./lindart
+
+    - name: Run codecov
+      working-directory: ./exemplo
+      run: |
+        - pipenv run codecov
