@@ -276,13 +276,10 @@ Installing dependencies from Pipfile.lock (796ba5)…
 <b>- Inserido no file pythonapp.yml</b>
 ```
     - name: Generate coverage report
-      working-directory: ./pagamentos
+      working-directory: ./exemplo
       run: |
+
         pip install pytest
-        pip install pytest-cov
-        pipenv run pytest --cov=./pagamentos
-
-      after_sucess:
-        pipenv run codecov
-
+        pipenv run pytest --cov=exemplo
+        pipenv run codecov --token="4848c513-7069-4e2d-a5a3-f9727717187c"
 ```
