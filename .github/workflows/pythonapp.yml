@@ -34,8 +34,11 @@ jobs:
         pipenv run pytest
 
     - name: Generate coverage report
-      working-directory: ./exemplo
+      working-directory: ./pagamentos
       run: |
         pip install pytest
         pip install pytest-cov
-        pipenv run pytest --cov=./lindart
+        pipenv run pytest --cov=./pagamentos
+
+      after_sucess:
+        pipenv run codecov
