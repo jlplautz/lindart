@@ -21,7 +21,7 @@ jobs:
         pip install pipenv
         pipenv install -d
         pipenv sync -d
-    - name: Lint with flake8
+    - name: Link with flake8
       working-directory: ./exemplo
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -32,3 +32,10 @@ jobs:
       working-directory: ./exemplo
       run: |
         pipenv run pytest
+
+    - name: Generate coverage report
+      working-directory: ./exemplo
+      run: |
+        pip install pytest
+        pip install pytest-cov
+        pipenv run pytest --cov=./lindart
