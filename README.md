@@ -2,6 +2,12 @@
 
 <b>Projeto da loja virtual lindart.com.br</b>
 
+
+
+[![codecov](https://codecov.io/gh/jlplautz/lindart/branch/master/graph/badge.svg)](https://codecov.io/gh/jlplautz/lindart)
+
+
+
 Issue #1 - <b>O diretório no ambiente de desenvolvimento</b> 
 ```
 - lindart $ pyenv local 3.8.0
@@ -247,3 +253,32 @@ exclude = .venv
 - Usado recomendação do Raul Esteves -<b>Como fazer um README.md BONITÃO</b>
 
 
+Issue #11 - <b>Instalar lib Codevcov</b>
+
+- Instalado lib Codecov
+```
+(exemplo) exemplo $ pipenv install --dev pytest-cov
+Courtesy Notice: Pipenv found itself running within a virtual environment, so it will automatically use that environment, 
+instead of creating its own for any project. You can set PIPENV_IGNORE_VIRTUALENVS=1 to force pipenv to ignore that 
+environment and create its own instead. You can set PIPENV_VERBOSITY=-1 to suppress this warning.
+Installing pytest-cov…
+✔ Installation Succeeded 
+Pipfile.lock (796ba5) out of date, updating to (ceda80)…
+Locking [dev-packages] dependencies…
+✔ Success! 
+Locking [packages] dependencies…
+✔ Success! 
+Updated Pipfile.lock (796ba5)!
+Installing dependencies from Pipfile.lock (796ba5)…
+  🐍   ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉ 28/28 — 00:00:07
+```
+
+<b>- Inserido no file pythonapp.yml</b>
+```
+    - name: Generate coverage report
+      working-directory: ./exemplo
+      run: |
+        pip install pytest
+        pip install pytest-cov
+        pipenv run pytest --cov=./lindart
+```
