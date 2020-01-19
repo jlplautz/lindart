@@ -9,10 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
         python-version: 3.8
+
     - name: Install dependencies
       working-directory: ./exemplo
       run: |
@@ -21,6 +23,7 @@ jobs:
         pip install pipenv
         pipenv install -d
         pipenv sync -d
+
     - name: Link with flake8
       working-directory: ./exemplo
       run: |
@@ -28,14 +31,18 @@ jobs:
         pipenv run flake8 .. --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         pipenv run flake8 .. --count --exit-zero --max-complexity=10 --statistics
+
     - name: Test with pytest
+        token: ${{secrets.4848c513-7069-4e2d-a5a3-f9727717187c}}
+        file: ./coverage.xml
+        flags: pytest
       working-directory: ./exemplo
       run: |
         pipenv run pytest
 
     - name: Generate coverage report
-      working-directory: ./exemplo
+      working-directory: ./pagamentos
       run: |
-        pip install pytest
-        pip install pytest-cov
-        pipenv run pytest --cov=./lindart
+        pipenv run pytest pagamentos  --cov=pagamentos
+      after_sucess:
+        pipenv run codecov

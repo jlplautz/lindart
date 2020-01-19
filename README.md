@@ -3,10 +3,7 @@
 <b>Projeto da loja virtual lindart.com.br</b>
 
 
-
 [![codecov](https://codecov.io/gh/jlplautz/lindart/branch/master/graph/badge.svg)](https://codecov.io/gh/jlplautz/lindart)
-
-
 
 Issue #1 - <b>O diretório no ambiente de desenvolvimento</b> 
 ```
