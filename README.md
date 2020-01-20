@@ -283,3 +283,145 @@ Installing dependencies from Pipfile.lock (796ba5)…
         pipenv run pytest --cov=exemplo
         pipenv run codecov --token="4848c513-7069-4e2d-a5a3-f9727717187c"
 ```
+
+Issue #18 - <b>Instalar lib Python Decople</b>
+
+```
+(exemplo) exemplo $ pipenv install 'python-decouple'
+Courtesy Notice: Pipenv found itself running within a virtual environment, so it will automatically use that 
+environment, instead of creating its own for any project. You can set PIPENV_IGNORE_VIRTUALENVS=1 to force pipenv 
+to ignore that environment and create its own instead. You can set PIPENV_VERBOSITY=-1 to suppress this warning.
+Installing python-decouple…
+✔ Installation Succeeded 
+Pipfile.lock (745cca) out of date, updating to (796ba5)…
+Locking [dev-packages] dependencies…
+✔ Success! 
+Locking [packages] dependencies…
+✔ Success! 
+Updated Pipfile.lock (745cca)!
+Installing dependencies from Pipfile.lock (745cca)…
+```
+<b>- Criado o file Procfile na raiz do projeto</b>
+- Inserido o seguinte conteúdo:
+
+```
+web: gunicorn lindart.wsgi --log-file -
+->    gunicorn é um servidor de aplicativo do python que vai fazer a gestao das conexoes
+```
+<b>- Instalada a lib gunicorn</b>
+```
+(exemplo) exemplo $ pipenv install gunicorn
+Installing gunicorn…
+✔ Installation Succeeded 
+Pipfile.lock (818410) out of date, updating to (745cca)…
+Locking [dev-packages] dependencies…
+✔ Success! 
+Locking [packages] dependencies…
+✔ Success! 
+Updated Pipfile.lock (818410)!
+Installing dependencies from Pipfile.lock (818410)…
+  🐍   ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉ 7/7 — 00:00:03
+```
+
+<b>-Criada applicação no Heroku e publicar o projeto</b>
+
+-> heroku apps:create lindart
+```
+(exemplo) exemplo $ git remote -v
+heroku  https://git.heroku.com/lindart.git (fetch)
+heroku  https://git.heroku.com/lindart.git (push)
+origin  git@github.com:jlplautz/lindart.git (fetch)
+origin  git@github.com:jlplautz/lindart.git (push)
+```
+
+<b>-Executado o push para o Heroku</b>
+
+(exemplo) exemplo $ git push heroku 18:master -f
+```
+  !     Error while running '$ python exemplo/manage.py collectstatic --noinput'.
+remote:        See traceback above for details.
+remote: 
+remote:        You may need to update application code to resolve this error.
+remote:        Or, you can disable collectstatic for this application:
+remote: 
+remote:           $ heroku config:set DISABLE_COLLECTSTATIC=1
+remote: 
+remote:        https://devcenter.heroku.com/articles/django-assets
+remote:  !     Push rejected, failed to compile Python app.
+```
+
+<b> desabilitado -> heroku config:set DISABLE_COLLECTSTATIC=1</b>
+```
+(exemplo) exemplo $ heroku config:set DISABLE_COLLECTSTATIC=1
+Setting DISABLE_COLLECTSTATIC and restarting ⬢ lindart... done, v3
+DISABLE_COLLECTSTATIC: 1
+```
+
+<b>-Executado o push para o Heroku</b>
+```
+(exemplo) exemplo $ git push heroku 18:master -f
+Counting objects: 86, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (67/67), done.
+Writing objects: 100% (86/86), 34.66 KiB | 6.93 MiB/s, done.
+Total 86 (delta 30), reused 4 (delta 0)
+remote: Compressing source files... done.
+remote: Building source:
+remote: 
+remote: -----> Python app detected
+remote: -----> Installing python-3.6.10
+remote: -----> Installing pip
+remote: -----> Installing SQLite3
+remote: Sqlite3 successfully installed.
+remote: -----> Installing requirements with pip
+remote:        Obtaining file:///tmp/build_271854d32faffd5a271343368252219a (from -r /tmp/build_271854d32faffd5a271343368252219a/requirements.txt (line 1))
+remote:        Collecting django>=2.0 (from lindart==0.1->-r /tmp/build_271854d32faffd5a271343368252219a/requirements.txt (line 1))
+remote:          Downloading https://files.pythonhosted.org/packages/55/d1/8ade70e65fa157e1903fe4078305ca53b6819ab212d9fbbe5755afc8ea2e/Django-3.0.2-py3-none-any.whl (7.4MB)
+remote:        Collecting sqlparse>=0.2.2 (from django>=2.0->lindart==0.1->-r /tmp/build_271854d32faffd5a271343368252219a/requirements.txt (line 1))
+remote:          Downloading https://files.pythonhosted.org/packages/ef/53/900f7d2a54557c6a37886585a91336520e5539e3ae2423ff1102daf4f3a7/sqlparse-0.3.0-py2.py3-none-any.whl
+remote:        Collecting asgiref~=3.2 (from django>=2.0->lindart==0.1->-r /tmp/build_271854d32faffd5a271343368252219a/requirements.txt (line 1))
+remote:          Downloading https://files.pythonhosted.org/packages/a5/cb/5a235b605a9753ebcb2730c75e610fb51c8cab3f01230080a8229fa36adb/asgiref-3.2.3-py2.py3-none-any.whl
+remote:        Collecting pytz (from django>=2.0->lindart==0.1->-r /tmp/build_271854d32faffd5a271343368252219a/requirements.txt (line 1))
+remote:          Downloading https://files.pythonhosted.org/packages/e7/f9/f0b53f88060247251bf481fa6ea62cd0d25bf1b11a87888e53ce5b7c8ad2/pytz-2019.3-py2.py3-none-any.whl (509kB)
+remote:        Installing collected packages: sqlparse, asgiref, pytz, django, lindart
+remote:          Running setup.py develop for lindart
+remote:        Successfully installed asgiref-3.2.3 django-3.0.2 lindart pytz-2019.3 sqlparse-0.3.0
+remote: 
+remote: -----> Discovering process types
+remote:        Procfile declares types -> (none)
+remote: 
+remote: -----> Compressing...
+remote:        Done: 50.1M
+remote: -----> Launching...
+remote:        Released v6
+remote:        https://lindart.herokuapp.com/ deployed to Heroku
+remote: 
+remote: Verifying deploy... done.
+To https://git.heroku.com/lindart.git
+ * [new branch]      18 -> master
+```
+
+<b>Criado arquivo .env no ambiente local</b>
+```
+DEBUG=True
+```
+
+<b>criar um diretorio  contrib (que terá templates para facilitar para os usuraios)
+    Copiar o file .env para o diretorio contrib e mudar o nome para env-sample</b>
+```
+DEBUG=fALSE
+```
+
+<b> Setado a variavel npo heroku</b>
+```
+lindart $ heroku config:set DEBUG=False
+Setting DEBUG and restarting ⬢ lindart... done, v7
+DEBUG: False
+
+(exemplo) exemplo $ heroku config
+=== lindart Config Vars
+DATABASE_URL:          postgres://djkivrvliyzerb:c33f63470be55a3e0e8ee763f1da6eb642f06edb5f7707652f8d558884a817a9@ec2-3-220-86-239.compute-1.amazonaws.com:5432/d8u9sldgs37lh4
+DEBUG:                 False
+DISABLE_COLLECTSTATIC: 1
+
+```
