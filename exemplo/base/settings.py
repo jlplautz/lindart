@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from decouple import config
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -22,8 +24,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '+@sr30&(38$xveb427u(d8!h2n98)9@6l(q_a!2n1d7qed@t2*'
 
+# Dados para integração com Pagarme
+CHAVE_LINDART_API_PRIVADA = config('CHAVE_LINDART_API_PRIVADA')
+CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA = config('CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA')
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
