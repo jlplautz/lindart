@@ -21,6 +21,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
+# Dados para integração com Pagarme
+CHAVE_LINDART_API_PRIVADA = config('CHAVE_LINDART_API_PRIVADA')
+CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA = config('CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA')
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '+@sr30&(38$xveb427u(d8!h2n98)9@6l(q_a!2n1d7qed@t2*'
 
