@@ -350,9 +350,6 @@ def produto(request):
     return render(request, 'pagamentos/produto.html', ctx)
 ```
 
-
-
-
 <b>- Instalada a lib gunicorn</b>
 ```
 (exemplo) exemplo $ pipenv install gunicorn
@@ -454,10 +451,22 @@ Setting DEBUG and restarting ⬢ lindart... done, v7
 DEBUG: False
 ```
 <b>(exemplo) exemplo $ heroku config</b>
+
+<b>Criado arquivo .env no ambiente local</b>
+```
+DEBUG=True
+```
+
+<b> Setado a variavel no heroku</b>
+```
+lindart $ heroku config:set DEBUG=False
+Setting DEBUG and restarting ⬢ lindart... done, v7
+DEBUG: False
+```
+<b>(exemplo) exemplo $ heroku config</b>
 ```
 === lindart Config Vars
 DATABASE_URL:          postgres://djkivrvliyzerb:c33f63470be55a3e0e8ee763f1da6eb642f06edb5f7707652f8d558884a817a9@ec2-3-220-86-239.compute-1.amazonaws.com:5432/d8u9sldgs37lh4
 DEBUG:                 False
 DISABLE_COLLECTSTATIC: 1
-
 ```
