@@ -240,7 +240,7 @@ OBS: Alterar no file produto.html
 - Para funcionar copiei o conteudo produto.html do 
   -> https://github.com/renzon/django_pagarme
 
- Issue #9 - <b>Remover flake8 da raiz e corrigi o README</b>
+Issue #9 - <b>Remover flake8 da raiz e corrigi o README</b>
  
  - Conteúdo do flake8 foi incorporado no file setup.cfg
  ```
@@ -301,6 +301,47 @@ Locking [packages] dependencies…
 Updated Pipfile.lock (745cca)!
 Installing dependencies from Pipfile.lock (745cca)…
 ```
+
+<b>Criado arquivo .env no ambiente local</b>
+```
+DEBUG=True
+CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA= copiar a key CRIPTOGRAFIA do Pagar.me e cola aqui
+CHAVE_LINDART_API_PRIVADA=copiar a API do Pagar.me e cola aqui
+```
+
+<b>criar um diretorio  contrib (que terá templates para facilitar para os usuraios)
+    Copiar o file .env para o diretorio contrib e mudar o nome para env-sample</b>
+```
+DEBUG=False
+CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA=
+CHAVE_LINDART_API_PRIVADA=
+```
+
+<b>Alterado o file settings.py</b>
+```
+# Dados para integração com Pagarme
+CHAVE_LINDART_API_PRIVADA = config('CHAVE_LINDART_API_PRIVADA')
+CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA = config('CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA')
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = config('DEBUG', cast=bool)
+```
+
+<b>-Criado o TESTE para verificar a chave CRIPTOGRAFIA PUBLICA</b>
+```
+def test_encription_key_is_present(client, settings):
+    resp = client.get(reverse('pagamentos:produto'))
+    assert_contains(resp, settings.CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA)
+```
+
+<b>-Alterado na views.py a função produto</b>
+```
+from django.conf import settings
+def produto(request):
+    ctx = {'CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA': settings.CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA}
+    return render(request, 'pagamentos/produto.html', ctx)
+```
+
 <b>- Criado o file Procfile na raiz do projeto</b>
 - Inserido o seguinte conteúdo:
 
@@ -308,6 +349,7 @@ Installing dependencies from Pipfile.lock (745cca)…
 web: gunicorn lindart.wsgi --log-file -
 ->    gunicorn é um servidor de aplicativo do python que vai fazer a gestao das conexoes
 ```
+
 <b>- Instalada a lib gunicorn</b>
 ```
 (exemplo) exemplo $ pipenv install gunicorn
@@ -401,18 +443,7 @@ To https://git.heroku.com/lindart.git
  * [new branch]      18 -> master
 ```
 
-<b>Criado arquivo .env no ambiente local</b>
-```
-DEBUG=True
-```
-
-<b>criar um diretorio  contrib (que terá templates para facilitar para os usuraios)
-    Copiar o file .env para o diretorio contrib e mudar o nome para env-sample</b>
-```
-DEBUG=fALSE
-```
-
-<b> Setado a variavel npo heroku</b>
+<b> Setado a variavel no heroku</b>
 ```
 lindart $ heroku config:set DEBUG=False
 Setting DEBUG and restarting ⬢ lindart... done, v7
