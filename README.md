@@ -336,10 +336,18 @@ def test_encription_key_is_present(client, settings):
 
 <b>-Alterado na views.py a função produto</b>
 ```
-from django.conf import settings
+from django.conf import settings 
+ OBS: Importar o setting to Django.conf (pois é o valor é dinamico - e podemos manipular na hora de uma teste)
+
 def produto(request):
+    # ctx => contexto
     ctx = {'CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA': settings.CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA}
     return render(request, 'pagamentos/produto.html', ctx)
+```
+
+<b>-Alterado na produto.html</b>
+```
+       encryption_key: '{{CHAVE_LINDART_CRIPTOGRAFIA_PUBLICA}}',
 ```
 
 <b>- Criado o file Procfile na raiz do projeto</b>
@@ -393,6 +401,7 @@ remote:  !     Push rejected, failed to compile Python app.
 ```
 
 <b> desabilitado -> heroku config:set DISABLE_COLLECTSTATIC=1</b>
+
 ```
 (exemplo) exemplo $ heroku config:set DISABLE_COLLECTSTATIC=1
 Setting DISABLE_COLLECTSTATIC and restarting ⬢ lindart... done, v3
@@ -400,6 +409,7 @@ DISABLE_COLLECTSTATIC: 1
 ```
 
 <b>-Executado o push para o Heroku</b>
+
 ```
 (exemplo) exemplo $ git push heroku 18:master -f
 Counting objects: 86, done.
@@ -444,6 +454,7 @@ To https://git.heroku.com/lindart.git
 ```
 
 <b> Setado a variavel no heroku</b>
+
 ```
 lindart $ heroku config:set DEBUG=False
 Setting DEBUG and restarting ⬢ lindart... done, v7
@@ -454,5 +465,186 @@ DEBUG: False
 DATABASE_URL:          postgres://djkivrvliyzerb:c33f63470be55a3e0e8ee763f1da6eb642f06edb5f7707652f8d558884a817a9@ec2-3-220-86-239.compute-1.amazonaws.com:5432/d8u9sldgs37lh4
 DEBUG:                 False
 DISABLE_COLLECTSTATIC: 1
+```
 
+Issue #21 <b>Implementar captura do pagarme feita via cartao de credito</b>
+
+<b>Instalar a lib pagarme-python</b>
+
+```
+exemplo $ pipenv install pagarme-python
+Installing pagarme-python…
+Adding pagarme-python to Pipfile's [packages]…
+✔ Installation Succeeded 
+Pipfile.lock (31e0d1) out of date, updating to (818410)…
+Locking [dev-packages] dependencies…
+✔ Success! 
+Locking [packages] dependencies…
+✔ Success! 
+Updated Pipfile.lock (31e0d1)!
+Installing dependencies from Pipfile.lock (31e0d1)…
+  🐍   ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉ 13/13 — 00:00:03
+To activate this project's virtualenv, run pipenv shell.
+Alternatively, run a command inside the virtualenv with pipenv run.
+```
+<b>Criar a função captura</b>
+
+```
+@csrf_exempt
+def captura(request):
+    token = request.POST['token']
+    transaction.find_by_id(token)   <-- colocar o flag para Debug
+    return JsonResponse({'token': 'ok'})
+```
+<b>Executar o servidor Django na função Debug</b>
+
+OBS: Depois de preencher os dados da compra (Cliente + dados do Cartão de Credito)
+
+<b>Copiar => pagarme_response.json() => transaction_id</b>
+```
+'https://api.pagar.me/1/transactions/test_transaction_nORKaWFnz3wsUAXHInUsB9tLEszW02'
+```
+
+<b>Copiar => pagarme_response.json() => api_key</b>
+```
+{'api_key': 'ak_test_ZkBitMONXkvdMwwcoD9b9HM5jCdPCB'}
+```
+
+<b>Copiar => handler_request.py => pagarme_response.json()</b>
+```
+{'object': 'transaction', 'status': 'authorized', 'refuse_reason': None, 'status_reason': 'antifraud', 
+'acquirer_response_code': '0000', 'acquirer_name': 'pagarme', 'acquirer_id': '5e1db60d3d9e4e2947286920', 
+'authorization_code': '928705', 'soft_descriptor': None, 'tid': 7670664, 'nsu': 7670664, 
+'date_created': '2020-01-23T02:13:37.172Z', 'date_updated': '2020-01-23T02:13:37.441Z', 'amount': 8000, 
+'authorized_amount': 8000, 'paid_amount': 0, 'refunded_amount': 0, 'installments': 1, 'id': 7670664, 'cost': 70, 
+'card_holder_name': 'fooxiv', 'card_last_digits': '1111', 'card_first_digits': '411111', 'card_brand': 'visa', 
+'card_pin_mode': None, 'card_magstripe_fallback': False, 'cvm_pin': False, 'postback_url': None, 
+'payment_method': 'credit_card', 'capture_method': 'ecommerce', 'antifraud_score': None, 'boleto_url': None, 
+'boleto_barcode': None, 'boleto_expiration_date': None, 'referer': 'encryption_key', 'ip': '189.4.30.184', 
+```
+
+<b>Instalar a lib responses</b>
+```
+exemplo $ pipenv install -d responses
+Installing responses…
+Adding responses to Pipfile's [dev-packages]…
+✔ Installation Succeeded 
+Pipfile.lock (3de297) out of date, updating to (31e0d1)…
+Locking [dev-packages] dependencies…
+✔ Success! 
+Locking [packages] dependencies…
+✔ Success! 
+Updated Pipfile.lock (3de297)!
+Installing dependencies from Pipfile.lock (3de297)…
+  🐍   ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉ 32/32 — 00:00:09
+To activate this project's virtualenv, run pipenv shell.
+Alternatively, run a command inside the virtualenv with pipenv run.
+```
+
+<b>Escrever os testes para captura</b>
+
+1- copiar o test_pagina_pagamento => test_captura
+
+2- alterar o test_status_code
+```
+def test_status_code(client):
+    resp = client.post(reverse('pagamentos:captura'), {'token': 'test_transaction_nORKaWFnz3wsUAXHInUsB9tLEszW02'})
+    assert resp.status_code == 200
+```
+
+3- selecionar a linha do test_status_code
+
+<b>client.post(reverse('pagamentos:captura'), {'token': 'test_transaction_nORKaWFnz3wsUAXHInUsB9tLEszW02'})</b>
+
+e criar uma fixture CRTL+ALT+M 
+
+```
+import pytest
+from django.urls import reverse
+
+@pytest.fixture
+def resp(client):
+    return client.post(reverse('pagamentos:captura'),{'token': 'test_transaction_nORKaWFnz3wsUAXHInUsB9tLEszW02'})
+
+def test_status_code(client, resp):
+    resp = resp(client)
+    assert resp.status_code == 200
+```
+
+4- criar uma outra fixture que vai emular as chamadas no servidor
+```
+@pytest.fixture
+def test_pagarme_responses():
+    with responses.RequestsMock() as rsps:
+        rsps.add(responses.GET, f'https://api.pagar.me/1/transactions/{TOKEN}', json=transaction_resp)
+        yield rsps
+```
+
+5- criar os testes ao pargarme (
+```
+@pytest.fixture
+def test_pagarme_responses():
+    with responses.RequestsMock() as rsps:
+        rsps.add(responses.GET, f'https://api.pagar.me/1/transactions/{TOKEN}', json=transaction_resp)
+        yield rsps
+
+@pytest.fixture
+def resp(client, test_pagarme_responses):
+    return client.post(reverse('pagamentos:captura'), {'token': TOKEN})
+
+def test_status_code(resp):
+    assert resp.status_code == 200
+```
+
+5- criar os testes ao pargarme (invalidos amount)
+```
+@pytest.fixture
+def test_pagarme_invalid_responses():
+    with responses.RequestsMock() as rsps:
+        rsps.add(responses.GET, f'https://api.pagar.me/1/transactions/{TOKEN}', json=transaction_resp_menor_que_minimo)
+        yield rsps
+
+
+@pytest.fixture
+def resp_invalido(client, test_pagarme_invalid_responses):
+    return client.post(reverse('pagamentos:captura'), {'token': TOKEN})
+
+
+def test_status_code_invalido_value(resp_invalido):
+    assert resp_invalido.status_code == 400
+```
+
+7- Alterar o views.py da api pagamentos para o teste do valor [amount]
+```
+@csrf_exempt
+def captura(request):
+    token = request.POST['token']
+    transacao = transaction.find_by_id(token)
+    valor = transacao['amount']
+    valor_minimo = 8000
+    if valor < valor_minimo:
+        return HttpResponseBadRequest(f'Valor {valor} menor que o minimo de {valor_minimo}')
+    return JsonResponse({'token': 'ok'})
+```
+
+<b>Para fazer a captura no pagarme do valor pago</b>
+
+Na views.pw do api pagamentos inserir:
+```
+  if valor < valor_minimo:
+        return HttpResponseBadRequest(f'Valor {valor} menor que o minimo de {valor_minimo}')
+    transaction.capture(token, {'amount': valor}) <== faz a captura
+```
+
+<b>Rever os testes para captura</b>
+Foi criado um json captura_resp para o teste.
+O json foi copiado no momento do teste pagarme_response.json())
+
+```
+@pytest.fixture
+def test_pagarme_responses():
+    with responses.RequestsMock() as rsps:
+        rsps.add(responses.GET, f'https://api.pagar.me/1/transactions/{TOKEN}', json=transaction_resp)
+        rsps.add(responses.POST, f'https://api.pagar.me/1/transactions/{TOKEN}/capture', json=captura_resp) <==
+        yield rsps
 ```
