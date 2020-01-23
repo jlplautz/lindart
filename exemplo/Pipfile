@@ -8,12 +8,14 @@ flake8 = "*"
 pytest-django = "*"
 codecov = "*"
 pytest-cov = "*"
+responses = "*"
 
 [packages]
 django = "*"
 ed0a5ba = {editable = true,path = "./.."}
 python-decouple = "*"
 gunicorn = "*"
+pagarme-python = "*"
 
 [requires]
 python_version = "3.8"
